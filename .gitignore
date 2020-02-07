@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+#Arduino libraries
+/libraries/*
+!/libraries/Potenciometro
+!/libraries/TunePlayer
+

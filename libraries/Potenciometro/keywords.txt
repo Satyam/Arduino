@@ -1,0 +1,5 @@
+Potenciometro	KEYWORD1
+begin	KEYWORD2
+getValue	KEYWORD2
+setPin	KEYWORD2
+setHandler	KEYWORD2

@@ -1,0 +1,27 @@
+#######################################
+# Syntax Coloring Map TunePlayer
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+TunePlayer	KEYWORD1
+TunePlayerClass	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+attach	KEYWORD2
+play	KEYWORD2
+setNoteDuration	KEYWORD2
+setGap	KEYWORD2
+onEnd	KEYWORD2
+isPlaying	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+DEFAULT_NOTE_DURATION	LITERAL1
+DEFAULT_GAP	LITERAL1
+TUNE_PLAYER_CLASS_H	LITERAL1
