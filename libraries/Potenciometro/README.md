@@ -50,12 +50,41 @@ Within the `setup()` function, start the reading:
 void setup() {
   Serial.begin(9600);
 
-  joystickX.begin();
-  joystickY.begin();
+  joystickX.start();
+  joystickY.start();
 
   // ......
 }
 ```
+
+On starting, it will read the current value for the potentiometer and use that value as the center or idle reference value.
+
+### Stop/suspend polling
+
+Polling of the potentiometer can be stopped at any time and later resumed.  The status can be read at any time:
+
+```c++
+Serial.println(joystickX.isActive());  // will print true
+joystickX.stop();
+Serial.println(joystickX.isActive());  // will print false
+
+// and at a later time
+joystickX.start();
+Serial.println(joystickX.isActive());  // will print true
+```
+
+Calling either `start` or `stop` more than once consecutively has does not hurt (meaning, you don't need to check whether it is active or not to change it).
+
+### Setting polling interval.
+
+`Potenciometro` inherits from `Task` in [SoftTimer](https://github.com/prampec/arduino-softtimer).  The polling time can be set directly by calling its `setPeriodMs`.
+
+```c++
+joystickX.setPeriodMS(100);
+```
+
+The value is in milliseconds and has a maximum of 4,294,967.
+
 ### Change pin and handler
 
 Either can be changed by calling the following functions:
@@ -67,9 +96,9 @@ Either can be changed by calling the following functions:
 
 ### Read the value
 
-The latest value read from the potentiometer can be read at any time.
 
 ```c++
   int getValue();
 ```
 
+If polling is active, it will provide the latest value read.  If it is not polling it will actually read the current value.
