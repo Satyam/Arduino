@@ -35,4 +35,5 @@
 /libraries/*
 !/libraries/Potenciometro
 !/libraries/TunePlayer
+!/libraries/CurrentSensor
 

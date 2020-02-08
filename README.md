@@ -10,6 +10,10 @@ My Arduino projects, some sketches, other libraries.  Each has its own README.md
 
 ## Libraries
 
+The following inherit from `Task` in [SoftTimer](https://github.com/prampec/arduino-softtimer)
+
 * [TunePlayer](libraries/TunePlayer) Allows simple tunes to be played in a buzzer.
-* [Potenciometro](libraries/Potenciometro) Simplifies control of a potentiometer.
+* [Potenciometro](libraries/Potenciometro) Simplifies reading of a potentiometer.
+* [CurrentSensort](libraries/CurrentSensor) Allows polling and averaging of the ACS-712 current sensor.
+* 
 
