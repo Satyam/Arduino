@@ -2,7 +2,7 @@
 #include "Potenciometro.h"
 #include "SoftTimer.h"
 
-Potenciometro::Potenciometro(int pin, void (*onHandler)(int value)): Task(POLLING_TIME_MS, &(Potenciometro::step)) {
+Potenciometro::Potenciometro(int pin, void (*onHandler)(int value)): Task(50, &(Potenciometro::step)) {
 
   this->_pin = pin;
   this->_onHandler = onHandler;
@@ -45,6 +45,10 @@ int Potenciometro::getValue() {
 void Potenciometro::setHandler(void (*onHandler)(int value)) {
   this->_onHandler = onHandler;
 }
+
+void Potenciometro::setPollingInterval(unsigned long ms) {
+  this->setPeriodMs(ms);
+};
 
 void Potenciometro::step(Task* task) {
   Potenciometro* me = (Potenciometro*)task;

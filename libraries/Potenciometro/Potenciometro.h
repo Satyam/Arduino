@@ -4,8 +4,6 @@
 #include "Arduino.h"
 #include "Task.h"
 
-#define POLLING_TIME_MS 50
-
 class Potenciometro : public Task {
   public:
     Potenciometro(int pin, void (*onHandler)(int value));
@@ -15,6 +13,7 @@ class Potenciometro : public Task {
     int getValue();
     void setPin(int pin);
     void setHandler(void (*onHandler)(int value));
+    void setPollingInterval(unsigned long ms);
 
   private:
     bool _isInitialized;

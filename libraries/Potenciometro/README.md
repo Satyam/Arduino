@@ -77,10 +77,10 @@ Calling either `start` or `stop` more than once consecutively has does not hurt 
 
 ### Setting polling interval.
 
-`Potenciometro` inherits from `Task` in [SoftTimer](https://github.com/prampec/arduino-softtimer).  The polling time can be set directly by calling its `setPeriodMs`.
+The default polling interval is set at 50ms.  It can be changed with the `SetPollingInterval` function.
 
 ```c++
-joystickX.setPeriodMS(100);
+joystickX.setPollingInterval(100);
 ```
 
 The value is in milliseconds and has a maximum of 4,294,967.
