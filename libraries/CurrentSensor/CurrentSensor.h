@@ -16,16 +16,15 @@ class CurrentSensor : public Task {
     void setTotalCount(int totalCount);
     void setPollingInterval(unsigned long ms);
     void setMaxCurrent(float amps);
-
+    void init() override;
 
   private:
-    bool _isInitialized;
     bool _isActive;
     int _pin;
     void (*_onHandler)(float value);
     float _factor;
     float _idle;
-    long _sum;
+    float _sum;
     int _cnt;
     int _totalCount;
     static void step(Task* me);
