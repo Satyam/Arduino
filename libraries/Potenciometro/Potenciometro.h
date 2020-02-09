@@ -14,9 +14,9 @@ class Potenciometro : public Task {
     void setPin(int pin);
     void setHandler(void (*onHandler)(int value));
     void setPollingInterval(unsigned long ms);
+    void init() override;
 
   private:
-    bool _isInitialized;
     int _pin;
     int _idle;
     int _last;

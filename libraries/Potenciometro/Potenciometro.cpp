@@ -7,19 +7,18 @@ Potenciometro::Potenciometro(int pin, void (*onHandler)(int value)): Task(50, &(
   this->_pin = pin;
   this->_onHandler = onHandler;
   this->_isActive = false;
-  this->_isInitialized = false;
 }
 
 
 void Potenciometro::start() {
-  if (!this->_isInitialized) {
-    this->_isInitialized = true;
-    this->_idle = 0;
-    this->_idle = this->_readPotenciometro();
-  }
-
   SoftTimer.add(this);
   this->_isActive = true;
+}
+
+void Potenciometro::init() {
+  this->_idle = 0;
+  this->_idle = this->_readPotenciometro();
+  Task::init();
 }
 
 void Potenciometro::stop() {
