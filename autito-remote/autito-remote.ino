@@ -1,10 +1,10 @@
 #include "autito-remote.h";
 
-Potenciometro jX(JOY_X, &jXHandler);
-Potenciometro jY(JOY_Y, &jYHandler);
+Potenciometro jX(JOY_X, jXHandler);
+Potenciometro jY(JOY_Y, jYHandler);
 Debouncer jSwDebouncer(JOY_SWITCH, MODE_CLOSE_ON_PUSH, startTune, NULL, true);
 
-CurrentSensor currentSensor(CURRENT_SENSOR, &csHandler);
+CurrentSensor currentSensor(CURRENT_SENSOR, csHandler);
 
 Servo servo;
 
@@ -39,7 +39,7 @@ void setup() {
   // Tune player
 
   TunePlayer.attach(BUZZER);
-  TunePlayer.onEnd(&tuneEndHandler);
+  TunePlayer.onEnd(tuneEndHandler);
 
   // Play it slow
   TunePlayer.setNoteDuration(DURATION);

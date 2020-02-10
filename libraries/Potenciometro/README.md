@@ -37,8 +37,8 @@ One or more, instances can be created, for example for the potentiometers on a j
 The callback function is not required and can be given as `NULL`.
 
 ```c++
-Potenciometro joystickX(JOY_X, &onX);
-Potenciometro joystickY(JOY_Y, &onY);
+Potenciometro joystickX(JOY_X, onX);
+Potenciometro joystickY(JOY_Y, onY);
 ```
 
 ### Start reading

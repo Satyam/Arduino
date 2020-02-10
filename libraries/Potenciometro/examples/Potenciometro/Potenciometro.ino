@@ -9,7 +9,7 @@ void onX(int value) {
   Serial.println(value);
 }
 
-Potenciometro p(JOY_X, &onX);
+Potenciometro p(JOY_X, onX);
 
 void cbWatchdog(Task* me) {
   Serial.println("watchdog");

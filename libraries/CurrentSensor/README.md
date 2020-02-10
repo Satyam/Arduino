@@ -41,7 +41,7 @@ void onCs(float value) {
 On creation the pin the sensor is attached to, and the callback function are needed.  The callback function is not required and can be given as `NULL`.
 
 ```c++
-CurrentSensor cs(A2, &onCs);
+CurrentSensor cs(A2, onCs);
 ```
 
 ### Start sampling

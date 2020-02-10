@@ -24,7 +24,7 @@ void setup() {
   // Attach the pin for the buzzer
   TunePlayer.attach(BUZZER);
   // Tell what to call when finished
-  TunePlayer.onEnd(&onEndHandler);
+  TunePlayer.onEnd(onEndHandler);
 
   // Play it slow
   TunePlayer.setNoteDuration(400);

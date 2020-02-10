@@ -27,7 +27,7 @@ void onCs(float value) {
   Serial.println(value);
 }
 
-CurrentSensor cs(A2, &onCs);
+CurrentSensor cs(A2, onCs);
 
 
 void setMotor(int speed)  {

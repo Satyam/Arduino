@@ -108,10 +108,10 @@ This results in:
 
 The handler can be named anything, doesn't receive any argument nor does it need to return anything. 
 
-To tell `TunePlayer` to call the handler, pass a reference (&handler) to the `onEnd()` method:
+To tell `TunePlayer` to call the handler, pass a reference to the `onEnd()` method:
 
 ```c++
-TunePlayer.onEnd(&onEndHandler);
+TunePlayer.onEnd(onEndHandler);
 ```
 
 ## Example:
@@ -144,7 +144,7 @@ void setup() {
   TunePlayer.attach(BUZZER);
   
   // Tell what to call when finished
-  TunePlayer.onEnd(&onEndHandler);
+  TunePlayer.onEnd(onEndHandler);
 
   // Play it slow
   TunePlayer.setNoteDuration(400);
