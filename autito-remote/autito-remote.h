@@ -39,7 +39,7 @@ void setTurn(int turn);
 // Music:
 #define BUZZER 8
 #define DURATION 300
-#define GAP (DURATION + 50)
+#define GAP 30
 
 int tune[] = {
   NOTE_AS4, 1,
@@ -80,6 +80,7 @@ void cmdHandler(Task* me);
 // Report Status
 
 #define REMOTE_CMD '>'
+#define PARAM '='
 #define SPEED 's'
 #define TURN 't'
 #define CURRENT 'c'

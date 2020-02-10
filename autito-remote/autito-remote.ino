@@ -50,8 +50,8 @@ void setup() {
   // Make it slow right now so it doesn't overwhelm the logger.
   currentSensor.setPollingInterval(50);
   currentSensor.setTotalCount(20);
-// Hold it at this point
-  // currentSensor.start();
+
+  // *** currentSensor.start();
 
   Serial.println("s0t0!0#0");
 
@@ -59,24 +59,26 @@ void setup() {
 
 
 void cmdHandler(Task* me) {
-  byte firstByte = 0;
   if (Serial.available()) {
     byte remoteCommand = (byte)Serial.read();
     REPORT(REMOTE_CMD, char(remoteCommand));
+    REPORT(PARAM, (byte) Serial.peek());
     switch (remoteCommand) {
 
-      case GO_FORWARD:
-        firstByte = (byte)Serial.read();
-        setMotor(firstByte);
+      case GO_FORWARD: {
+        byte speed = (byte)Serial.read();
+        setMotor(speed);
 
-        REPORT(SPEED, firstByte);
+        REPORT(SPEED, speed);
+        }
         break;
 
-      case GO_BACK:
-        firstByte = (byte)Serial.read();
-        setMotor(-firstByte);
+      case GO_BACK: {
+        byte speed = (byte)Serial.read();
+        setMotor(-speed);
 
-        REPORT(SPEED, -firstByte);
+        REPORT(SPEED, -speed);
+        }
         break;
 
       case STOP:
@@ -85,18 +87,20 @@ void cmdHandler(Task* me) {
         REPORT(SPEED, 0);
         break;
 
-      case TURN_LEFT:
-        firstByte = (byte)Serial.read();
-        setTurn(-firstByte);
+      case TURN_LEFT: {
+        byte turn = (byte)Serial.read();
+        setTurn(-turn);
 
-        REPORT(TURN, -firstByte);
+        REPORT(TURN, -turn);
+        }
         break;
 
-      case TURN_RIGHT:
-        firstByte = (byte)Serial.read();
-        setTurn(firstByte);
+      case TURN_RIGHT: {
+        byte turn = (byte)Serial.read();
+        setTurn(turn);
 
-        REPORT(TURN, firstByte);
+        REPORT(TURN, turn);
+        }
         break;
 
       case GO_STRAIGHT:
@@ -109,25 +113,19 @@ void cmdHandler(Task* me) {
         startTune();
         break;
 
-      case LED:
-        firstByte = (byte)Serial.read();
-        digitalWrite(LED_BUILTIN, firstByte ? HIGH : LOW );
+      case LED: {
+        byte led  = (byte)Serial.read();
+        digitalWrite(LED_BUILTIN, led ? HIGH : LOW );
 
-        REPORT(LED, firstByte);
+        REPORT(LED, led);
+      }
         break;
-      case FULL_FORWARD:
-        digitalWrite(DIRA, LOW);
-        digitalWrite(DIRB, HIGH);
-
-        digitalWrite(ENABLE, HIGH);
-        REPORT(SPEED, 255);
-        break;
-      case FULL_BACK:
-        digitalWrite(DIRA, HIGH);
-        digitalWrite(DIRB, LOW);
-
-        digitalWrite(ENABLE, HIGH);
-        REPORT(SPEED, -255);
+      case CURRENT:
+        if ((byte) Serial.read()) {
+          currentSensor.start();
+        } else {
+          currentSensor.stop();
+        }
         break;
       case REMOTE:
         bool remote = (bool)Serial.read();
