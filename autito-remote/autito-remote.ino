@@ -47,11 +47,9 @@ void setup() {
 
   // Current sensor
 
-  // Make it slow right now so it doesn't overwhelm the logger.
-  currentSensor.setPollingInterval(50);
-  currentSensor.setTotalCount(20);
+  currentSensor.setDiscardExtremes(true);
 
-  // *** currentSensor.start();
+  currentSensor.start();
 
   Serial.println("s0t0!0#0");
 

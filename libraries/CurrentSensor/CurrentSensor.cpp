@@ -25,7 +25,7 @@ void CurrentSensor::init()
   this->_cnt = 0;
   this->_sum = 0.0;
   this->_idle = 0.0;
-
+  this->_discardExtremes = false;
   Task::init();
 }
 
@@ -61,21 +61,36 @@ void CurrentSensor::setPollingInterval(unsigned long ms) {
   this->_sum = 0.0;
 };
 
+void CurrentSensor::setDiscardExtremes(bool discard) {
+  this->_discardExtremes = discard;
+}
+
 void CurrentSensor::step(Task* task) {
   CurrentSensor* me = (CurrentSensor*)task;
 
+  bool discard = me->_discardExtremes;
+  float value;
+
   if (me->_cnt < me->_totalCount) {
-    me->_sum += float(analogRead(me->_pin));
+    value = float(analogRead(me->_pin));
+    me->_minValue = min(me->_minValue, value);
+    me->_maxValue = max(me->_maxValue, value);
+    me->_sum += value;
     me->_cnt++;
   } else {
+    value = discard
+      ? (me->_sum  - me->_minValue - me->_maxValue) / float(me->_cnt - 2 )
+      : me->_sum / float(me->_cnt);
     if (me->_idle > 0.0) {
       if (me->_onHandler != NULL) {
-        me->_onHandler((me->_sum / float(me->_cnt)  - me->_idle)  * me->_factor);
+        me->_onHandler((value  - me->_idle)  * me->_factor);
       }
     } else {
-      me->_idle = me->_sum / float(me->_cnt);
+      me->_idle = value;
     }
     me->_cnt = 0;
     me->_sum = 0.0;
+    me->_minValue = 1023;
+    me->_maxValue = 0;
   }
 }

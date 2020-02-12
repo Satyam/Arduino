@@ -16,6 +16,7 @@ class CurrentSensor : public Task {
     void setTotalCount(int totalCount);
     void setPollingInterval(unsigned long ms);
     void setMaxCurrent(float amps);
+    void setDiscardExtremes(bool discard);
     void init() override;
 
   private:
@@ -27,6 +28,9 @@ class CurrentSensor : public Task {
     float _sum;
     int _cnt;
     int _totalCount;
+    bool _discardExtremes;
+    float _minValue;
+    float _maxValue;
     static void step(Task* me);
 
 };
