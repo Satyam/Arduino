@@ -57,91 +57,106 @@ void setup() {
 
 }
 
+char remoteCommand = 0;
+
 
 void cmdHandler(Task* me) {
   if (Serial.available()) {
-    byte remoteCommand = (byte)Serial.read();
-    REPORT(REMOTE_CMD, char(remoteCommand));
-    REPORT(PARAM, (byte) Serial.peek());
-    switch (remoteCommand) {
+    if (remoteCommand) {
+      byte value = (byte)Serial.read();
+      switch (remoteCommand) {
 
-      case GO_FORWARD: {
-        byte speed = (byte)Serial.read();
-        setMotor(speed);
+        case GO_FORWARD: 
+          setMotor(value);
+          REPORT(SPEED, value);
+          break;
 
-        REPORT(SPEED, speed);
-        }
-        break;
+        case GO_BACK:
+          setMotor(-value);
+          REPORT(SPEED, -value);
+          break;
 
-      case GO_BACK: {
-        byte speed = (byte)Serial.read();
-        setMotor(-speed);
+        case TURN_LEFT: 
+          setTurn(-value);
+          REPORT(TURN, -value);
+          break;
 
-        REPORT(SPEED, -speed);
-        }
-        break;
+        case TURN_RIGHT: 
+          setTurn(value);
+          REPORT(TURN, value);
+          break;
 
-      case STOP:
-        setMotor(0);
+        case LED: 
+          digitalWrite(LED_BUILTIN, value ? HIGH : LOW );
+          REPORT(LED, value);
+          break;
 
-        REPORT(SPEED, 0);
-        break;
+        case CURRENT:
+          if (value) {
+            currentSensor.start();
+          } else {
+            currentSensor.stop();
+          }
+          break;
 
-      case TURN_LEFT: {
-        byte turn = (byte)Serial.read();
-        setTurn(-turn);
+        case REMOTE:
+          REPORT(REMOTE, value);
+          if (value) {
+            jX.stop();
+            jY.stop();
+          } else {
+            jX.start();
+            jY.start();
+          }
+          break;
 
-        REPORT(TURN, -turn);
-        }
-        break;
-
-      case TURN_RIGHT: {
-        byte turn = (byte)Serial.read();
-        setTurn(turn);
-
-        REPORT(TURN, turn);
-        }
-        break;
-
-      case GO_STRAIGHT:
-        setTurn(0);
-
-        REPORT(TURN, 0);
-        break;
-
-      case BEEP:
-        startTune();
-        break;
-
-      case LED: {
-        byte led  = (byte)Serial.read();
-        digitalWrite(LED_BUILTIN, led ? HIGH : LOW );
-
-        REPORT(LED, led);
+        case STOP:
+        case GO_STRAIGHT:
+        case BEEP:
+        default:
+          break;
       }
-        break;
-      case CURRENT:
-        if ((byte) Serial.read()) {
-          currentSensor.start();
-        } else {
-          currentSensor.stop();
-        }
-        break;
-      case REMOTE:
-        bool remote = (bool)Serial.read();
-        REPORT(REMOTE, remote);
 
-        if (remote) {
-          jX.stop();
-          jY.stop();
-        } else {
-          jX.start();
-          jY.start();
-        }
-        break;
 
-      default:
-        break;
+      remoteCommand = 0;
+    } else {
+
+      remoteCommand = (char)Serial.read();
+      REPORT(REMOTE_CMD, char(remoteCommand));
+      switch (remoteCommand) {
+
+        // These need an extra argument
+        case GO_FORWARD: 
+        case GO_BACK: 
+        case TURN_LEFT: 
+        case TURN_RIGHT: 
+        case LED:
+        case CURRENT:
+        case REMOTE:
+          break;
+
+        case STOP:
+          setMotor(0);
+          REPORT(SPEED, 0);
+          remoteCommand = 0;
+          break;
+
+        case GO_STRAIGHT:
+          setTurn(0);
+          REPORT(TURN, 0);
+          remoteCommand = 0;
+          break;
+
+        case BEEP:
+          startTune();
+          remoteCommand = 0;
+          break;
+
+        default:
+          REPORT(PARAM, remoteCommand);
+          remoteCommand = 0;
+          break;
+      }
     }
   }
 }
