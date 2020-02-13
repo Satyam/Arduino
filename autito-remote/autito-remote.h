@@ -9,6 +9,7 @@
 #include <TunePlayer.h>
 #include <Servo.h>
 #include <pitches.h>
+#include <HBridge.h>
 
 #define DEBOUNCE_INTERVAL 25
 
@@ -27,8 +28,6 @@ void jYHandler(int y);
 #define DIRA 3
 #define DIRB 4
 #define MAX_SPEED 255
-
-void setMotor(int speed);
 
 // Servo
 #define SERVO 9

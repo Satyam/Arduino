@@ -6,6 +6,8 @@ Debouncer jSwDebouncer(JOY_SWITCH, MODE_CLOSE_ON_PUSH, startTune, NULL, true);
 
 CurrentSensor currentSensor(CURRENT_SENSOR, csHandler);
 
+HBridge motor(DIRA, DIRB, ENABLE);
+
 Servo servo;
 
 Task fetchCmd(1, cmdHandler);
@@ -21,10 +23,7 @@ void setup() {
 
 
   // DC Motor
-  pinMode(ENABLE, OUTPUT);
-  pinMode(DIRA, OUTPUT);
-  pinMode(DIRB, OUTPUT);
-
+  motor.init();
 
   // Servo
   servo.attach(SERVO);
@@ -65,12 +64,12 @@ void cmdHandler(Task* me) {
       switch (remoteCommand) {
 
         case GO_FORWARD: 
-          setMotor(value);
+          motor.speed(value);
           REPORT(SPEED, value);
           break;
 
         case GO_BACK:
-          setMotor(-value);
+          motor.speed(-value);
           REPORT(SPEED, -value);
           break;
 
@@ -134,7 +133,7 @@ void cmdHandler(Task* me) {
           break;
 
         case STOP:
-          setMotor(0);
+          motor.speed(0);
           REPORT(SPEED, 0);
           remoteCommand = 0;
           break;
@@ -157,19 +156,6 @@ void cmdHandler(Task* me) {
       }
     }
   }
-}
-
-
-void setMotor(int speed)  {
-  if (speed < 0) {
-    digitalWrite(DIRA, HIGH);
-    digitalWrite(DIRB, LOW);
-
-  } else {
-    digitalWrite(DIRA, LOW);
-    digitalWrite(DIRB, HIGH);
-  }
-  analogWrite(ENABLE, abs(speed));
 }
 
 void setTurn(int turn) {
@@ -201,7 +187,7 @@ void jXHandler(int x) {
 };
 void jYHandler(int y) {
   int s = - min(y, MAX_BYTE);
-  setMotor(s);
+  motor.speed(s);
   REPORT(SPEED, s);
   REPORT(Y_POS, s);
   
