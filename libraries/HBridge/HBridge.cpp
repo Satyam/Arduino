@@ -13,7 +13,8 @@ void HBridge::init() {
   pinMode(this->_pinEnable, OUTPUT);
 }
 
-void HBridge::speed(int speed) {
+void HBridge::setSpeed(int speed) {
+  this->_speed = speed;
   if (speed < 0) {
     digitalWrite(this->_pinDirA, HIGH);
     digitalWrite(this->_pinDirB, LOW);
@@ -33,4 +34,8 @@ void HBridge::speed(int speed) {
       analogWrite(this->_pinEnable, abs(speed));
       break;
   }
+}
+
+int HBridge::getSpeed() {
+  return this->_speed;
 }

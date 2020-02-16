@@ -64,12 +64,12 @@ void cmdHandler(Task* me) {
       switch (remoteCommand) {
 
         case GO_FORWARD: 
-          motor.speed(value);
+          motor.setSpeed(value);
           REPORT(SPEED, value);
           break;
 
         case GO_BACK:
-          motor.speed(-value);
+          motor.setSpeed(-value);
           REPORT(SPEED, -value);
           break;
 
@@ -133,7 +133,7 @@ void cmdHandler(Task* me) {
           break;
 
         case STOP:
-          motor.speed(0);
+          motor.setSpeed(0);
           REPORT(SPEED, 0);
           remoteCommand = 0;
           break;
@@ -187,7 +187,7 @@ void jXHandler(int x) {
 };
 void jYHandler(int y) {
   int s = - min(y, MAX_BYTE);
-  motor.speed(s);
+  motor.setSpeed(s);
   REPORT(SPEED, s);
   REPORT(Y_POS, s);
   

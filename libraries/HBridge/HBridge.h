@@ -7,10 +7,12 @@ class HBridge {
   public:
     HBridge(int pinDirA, int pinDirB, int pinEnable);
     void init();
-    void speed(int speed);
+    void setSpeed(int speed);
+    int getSpeed();
   private:
     int _pinDirA;
     int _pinDirB;
     int _pinEnable;
+    int _speed;
 };
 #endif
