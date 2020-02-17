@@ -10,6 +10,7 @@
 #include <Servo.h>
 #include <pitches.h>
 #include <HBridge.h>
+#include <CmdOneByte.h>
 
 #define DEBOUNCE_INTERVAL 25
 
@@ -74,7 +75,7 @@ void csHandler(float value);
 
 #define REMOTE 'R'
 
-void cmdHandler(Task* me);
+void cmdHandler(char cmd, byte value);
 
 // Report Status
 

@@ -41,3 +41,5 @@
 !/libraries/TunePlayer
 !/libraries/CurrentSensor
 !/libraries/HBridge
+!/libraries/SerialCmd
+
