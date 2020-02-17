@@ -51,7 +51,7 @@ void setup() {
 
   currentSensor.start();
 
-  Serial.println("s0t0!0#0");
+  Serial.println("s0\nt0\n!0\n#0");
 
 }
 
@@ -128,9 +128,61 @@ void setTurn(int turn) {
   servo.write(long(turn) * MAX_SERVO / MAX_BYTE + MAX_SERVO);
 }
 
-void csHandler(float value) {
-  REPORT(CURRENT, value);
+int lastSpeed = 0;
+unsigned long peakEndTime = 0;
+float csSum = 0.0;
+float csCnt = 0;
+int overCurrentCount = 0;
+
+// These values might need to be tweeked:
+float OVERCURRENT_FACTOR = 1.1;
+int OVERCURRENT_COUNT = 8;
+unsigned long PEAK_DURATION = 500;
+int SIZEOF_SAMPLE = 100;
+// ---
+
+void csHandler(float current) {
+  REPORT(CURRENT, current);
+  int speed = motor.getSpeed();
+  if (lastSpeed != speed) {
+    lastSpeed = speed;
+    if (speed) {
+      peakEndTime = millis() + PEAK_DURATION;
+    } else {
+      peakEndTime = 0;
+      csSum = 0.0;
+      csCnt = 0;
+      overCurrentCount = 0;
+    }
+  }
+  if (speed && millis() > peakEndTime && csCnt < SIZEOF_SAMPLE) {
+    csSum += current;
+    csCnt += 1;
+  }
+  if (csCnt > 10) {
+    float limit = csSum / float(csCnt) * OVERCURRENT_FACTOR;
+    if (speed > 0) {
+      if (current > limit) {
+        overCurrentCount += 1;
+      } else {
+        overCurrentCount = 0;
+      }
+    } else {
+      if (current < limit) {
+        overCurrentCount += 1;
+      } else {
+        overCurrentCount = 0;
+      }
+    }
+  }
+  if (overCurrentCount > OVERCURRENT_COUNT) {
+    REPORT(HALTED, "halted");
+    motor.setSpeed(0);
+    REPORT(SPEED, 0);
+
+  }
 }
+
 
 void startTune() {
   REPORT(BEEP, true);

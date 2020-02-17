@@ -86,6 +86,7 @@ void cmdHandler(char cmd, byte value);
 #define CURRENT 'c'
 #define X_POS 'x'
 #define Y_POS 'y'
+#define HALTED 'H'
 
 #define REPORT(cmd, value)  Serial.print(cmd);Serial.println(value)
 
