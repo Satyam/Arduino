@@ -2,7 +2,7 @@
 #include "CmdOneByte.h"
 #include "SoftTimer.h"
 
-CmdOneByte::CmdOneByte(void (*onHandler)(char cmd, byte value)): Task(1, &(CmdOneByte::step))  {
+CmdOneByte::CmdOneByte(void (*onHandler)(char cmd, byte value)): Task(0, &(CmdOneByte::step))  {
   _onHandler = onHandler;  
 };
 
