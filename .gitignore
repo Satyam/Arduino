@@ -42,4 +42,5 @@
 !/libraries/CurrentSensor
 !/libraries/HBridge
 !/libraries/SerialCmd
+!/libraries/MyTask
 
