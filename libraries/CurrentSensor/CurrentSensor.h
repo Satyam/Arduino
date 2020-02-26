@@ -2,25 +2,24 @@
 #define CURRENT_SENSOR_H
 
 #include "Arduino.h"
-#include "Task.h"
+#include "MyTask.h"
 
-class CurrentSensor : public Task {
+class CurrentSensor : public MyTask {
   public:
     CurrentSensor(int pin, void (*onHandler)(float value));
-    void start();
-    void stop();
-    bool isActive();
     float getValue();
     void setPin(int pin);
     void setHandler(void (*onHandler)(float value));
     void setTotalCount(int totalCount);
-    void setPollingInterval(unsigned long ms);
     void setMaxCurrent(float amps);
     void setDiscardExtremes(bool discard);
+    
     void init() override;
+    void step() override;
+    void setPollingInterval(unsigned long ms) override;
+
 
   private:
-    bool _isActive;
     int _pin;
     void (*_onHandler)(float value);
     float _factor;
@@ -31,7 +30,6 @@ class CurrentSensor : public Task {
     bool _discardExtremes;
     float _minValue;
     float _maxValue;
-    static void step(Task* me);
 
 };
 #endif

@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include <pitches.h>
-#include <Task.h>
+#include <MyTask.h>
 
 /* 
  * Based on 120bpm and 4 notes per beat, 
@@ -14,7 +14,7 @@
 #define DEFAULT_NOTE_DURATION 113
 #define DEFAULT_GAP 12
 
-class TunePlayerClass: Task {
+class TunePlayerClass: MyTask {
   public:
     TunePlayerClass();
     
@@ -43,18 +43,16 @@ class TunePlayerClass: Task {
      */
     void onEnd(void (*onEndHandler)());
 
-    /**
-     * true if a tune is being played.  
-     */
-    bool isPlaying;
     
+    void step() override;
+    void stop() override;
+
   private:
     unsigned int _pin;
     unsigned int _noteDuration;
     unsigned int _gap;
     void (*_onEndHandler)();
     unsigned int* _tune;
-    static void _step(Task *task);
 };
 
 /** 

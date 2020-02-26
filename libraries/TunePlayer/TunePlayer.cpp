@@ -1,7 +1,7 @@
 #include "TunePlayer.h"
 #include <SoftTimer.h>
 
-TunePlayerClass::TunePlayerClass(): Task(0, &(TunePlayerClass::_step))  {
+TunePlayerClass::TunePlayerClass(): MyTask(0)  {
   this->_noteDuration = DEFAULT_NOTE_DURATION;
   this->_gap = DEFAULT_GAP;
 }
@@ -15,14 +15,12 @@ void TunePlayerClass::setNoteDuration( unsigned int noteDuration) {
 }
 
 bool TunePlayerClass::play(unsigned int * tune) {
-  if (this->isPlaying) return false;
-  this->isPlaying = true;
-
-  SoftTimer.remove(this);
+  if (this->isActive()) return false;
+  this->stop();
   this->_tune = tune;
 
-  this->setPeriodMs(0);
-  SoftTimer.add(this);
+  this->setPollingInterval(0);
+  this->start();
   return true;
 };
 
@@ -34,19 +32,23 @@ void TunePlayerClass::onEnd(void (*onEndHandler)()) {
   this->_onEndHandler = onEndHandler;
 }
 
-void TunePlayerClass::_step(Task *task) {
-  TunePlayerClass* me = (TunePlayerClass*)task;
+void stop() {
+    MyTask::stop();
+    noTone(this->_pin);
+}
 
-  unsigned int note = *(me->_tune++);
+void TunePlayerClass::step() {
+
+  unsigned int note = *(this->_tune++);
   if (note == 0) {
-    SoftTimer.remove(me);
-    noTone(me->_pin);
-    if (me->_onEndHandler)me->_onEndHandler();
+    this->stop();
+    noTone(this->_pin);
+    if (this->_onEndHandler)this->_onEndHandler();
     return;
   }
-  int duration = me->_noteDuration * *(me->_tune++);
-  tone(me->_pin, note, duration);
-  task->setPeriodMs(duration + me->_gap);
+  int duration = this->_noteDuration * *(this->_tune++);
+  tone(this->_pin, note, duration);
+  this->setPollingInterval(duration + this->_gap);
 }
 
 TunePlayerClass TunePlayer;

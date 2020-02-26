@@ -17,7 +17,8 @@ play	KEYWORD2
 setNoteDuration	KEYWORD2
 setGap	KEYWORD2
 onEnd	KEYWORD2
-isPlaying	KEYWORD2
+isActive	KEYWORD2
+stop  KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

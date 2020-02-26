@@ -2,7 +2,7 @@
 #include "CurrentSensor.h"
 #include "SoftTimer.h"
 
-CurrentSensor::CurrentSensor(int pin, void (*onHandler)(float value)): Task(10, &(CurrentSensor::step)) {
+CurrentSensor::CurrentSensor(int pin, void (*onHandler)(float value)): MyTask(10) {
   _pin = pin;
   _onHandler = onHandler;
   _totalCount = 10;
@@ -10,15 +10,6 @@ CurrentSensor::CurrentSensor(int pin, void (*onHandler)(float value)): Task(10, 
 }
 
 
-void CurrentSensor::start() {
-  SoftTimer.add(this);
-  this->_isActive = true;
-}
-
-void CurrentSensor::stop() {
-  SoftTimer.remove(this);
-  this->_isActive = false;
-}
 
 void CurrentSensor::init()
 {
@@ -26,12 +17,9 @@ void CurrentSensor::init()
   this->_sum = 0.0;
   this->_idle = 0.0;
   this->_discardExtremes = false;
-  Task::init();
+  MyTask::init();
 }
 
-bool CurrentSensor::isActive() {
-  return this->_isActive;
-};
 
 float CurrentSensor::getValue() {
   return (float(analogRead(this->_pin))  - this->_idle ) * this->_factor; 
@@ -56,7 +44,7 @@ void CurrentSensor::setTotalCount(int totalCount) {
 };
 
 void CurrentSensor::setPollingInterval(unsigned long ms) {
-  this->setPeriodMs(ms);
+  MyTask::setPollingInterval(ms);
   this->_cnt = 0;
   this->_sum = 0.0;
 };
@@ -65,32 +53,30 @@ void CurrentSensor::setDiscardExtremes(bool discard) {
   this->_discardExtremes = discard;
 }
 
-void CurrentSensor::step(Task* task) {
-  CurrentSensor* me = (CurrentSensor*)task;
-
-  bool discard = me->_discardExtremes;
+void CurrentSensor::step() {
+  bool discard = this->_discardExtremes;
   float value;
 
-  if (me->_cnt < me->_totalCount) {
-    value = float(analogRead(me->_pin));
-    me->_minValue = min(me->_minValue, value);
-    me->_maxValue = max(me->_maxValue, value);
-    me->_sum += value;
-    me->_cnt++;
+  if (this->_cnt < this->_totalCount) {
+    value = float(analogRead(this->_pin));
+    this->_minValue = min(this->_minValue, value);
+    this->_maxValue = max(this->_maxValue, value);
+    this->_sum += value;
+    this->_cnt++;
   } else {
     value = discard
-      ? (me->_sum  - me->_minValue - me->_maxValue) / float(me->_cnt - 2 )
-      : me->_sum / float(me->_cnt);
-    if (me->_idle > 0.0) {
-      if (me->_onHandler != NULL) {
-        me->_onHandler((value  - me->_idle)  * me->_factor);
+      ? (this->_sum  - this->_minValue - this->_maxValue) / float(this->_cnt - 2 )
+      : this->_sum / float(this->_cnt);
+    if (this->_idle > 0.0) {
+      if (this->_onHandler != NULL) {
+        this->_onHandler((value  - this->_idle)  * this->_factor);
       }
     } else {
-      me->_idle = value;
+      this->_idle = value;
     }
-    me->_cnt = 0;
-    me->_sum = 0.0;
-    me->_minValue = 1023;
-    me->_maxValue = 0;
+    this->_cnt = 0;
+    this->_sum = 0.0;
+    this->_minValue = 1023;
+    this->_maxValue = 0;
   }
 }

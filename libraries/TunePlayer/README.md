@@ -66,13 +66,23 @@ TunePlayer.play(tune);
 
 ### Check if available
 
-The property `isPlaying` will be `true` while a tune is being played.  
-No further tunes can be played while `isPlaying` us `true`.
+The method `isActive` (inherited from `MyTask`) will return `true` while a tune is being played.  
+No further tunes can be played while `isActive` is `true`.
 
 ```c++
-if (TunePlayer.isPlaying) {
+if (TunePlayer.isActive()) {
   // tune is being played
 }
+```
+
+### Stop playing
+
+The inherited method `stop` will stop playing the current tune.
+
+```c++
+// Ensure no tune is being played or stop playing the current one
+TunePlayer.stop();
+// A new tune may be played 
 ```
 
 ### Adjusting play speed

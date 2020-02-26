@@ -7,7 +7,7 @@
 class MyTask : public Task {
   public:
     MyTask(unsigned long interval);
-    void setPollingInterval(unsigned long ms);
+    virtual void setPollingInterval(unsigned long ms);
     virtual void start();
     virtual void stop();
     bool isActive();

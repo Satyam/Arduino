@@ -2,28 +2,23 @@
 #define POTENCIOMETRO_H
 
 #include "Arduino.h"
-#include "Task.h"
+#include "MyTask.h"
 
-class Potenciometro : public Task {
+class Potenciometro : public MyTask {
   public:
     Potenciometro(int pin, void (*onHandler)(int value));
-    void start();
-    void stop();
-    bool isActive();
     int getValue();
     void setPin(int pin);
     void setHandler(void (*onHandler)(int value));
-    void setPollingInterval(unsigned long ms);
     void init() override;
+    void step() override;
 
   private:
     int _pin;
     int _idle;
     int _last;
-    bool _isActive;
     void (*_onHandler)(int value);
     int _readPotenciometro();
-    static void step(Task* me);
 };
 
 #endif
